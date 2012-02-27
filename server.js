@@ -19,13 +19,24 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
 });
 
+var listeningPort = null;
 app.configure('development', function(){
+	listeningPort = 3000;
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 app.configure('production', function(){
+	listeningPort = 80;
   app.use(express.errorHandler());
 });
+
+// Routes
+app.get('/', function(req, res){
+  res.render('index', { title: '地雷探し' });
+});
+
+app.listen(listeningPort);
+console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
 var io = socketio.listen(app);
 
@@ -143,16 +154,13 @@ io.sockets.on('connection', function(socket) {
   socket.on('reset send', function() {
     setRandomMineField(mineField, 10);
     initializeField(field);
-    socket.emit('field push', field);
-    socket.broadcast.emit('field push', field);
-    socket.emit('msg push', '');
-    socket.broadcast.emit('msg push', '');
+    io.sockets.emit('field push', field);
+    io.sockets.emit('msg push', '');
   });
 
   socket.on('disconnect', function() {
     --userCount;
     socket.broadcast.emit('count push', userCount);
-    socket.emit('count push', userCount);
   });
 
   socket.on('pos send', function(pos) {
@@ -167,12 +175,4 @@ io.sockets.on('connection', function(socket) {
     socket.broadcast.emit('field push', field);
   });
 });
-
-// Routes
-app.get('/', function(req, res){
-  res.render('index', { title: '地雷探し' });
-});
-
-app.listen(80);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
