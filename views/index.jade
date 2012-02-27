@@ -1,0 +1,15 @@
+h1= title
+
+input(type='button', id='reset', value='＼(^o^)／')
+
+p
+  span(id='count') 0
+  span 人接続中
+
+table
+  - for( var i = 0; i < 9; ++i )
+    tr
+    - for( var j = 0; j < 9; ++j)
+      td(id="#{i}_#{j}", class='cell')
+
+p(id='msg')

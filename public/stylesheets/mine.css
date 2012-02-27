@@ -1,0 +1,20 @@
+td.cell {
+  border-style:solid; 
+  border-width:1px; 
+  border-color:#000000; 
+  text-align:center;
+  width:32px; 
+  height:32px;
+}
+
+td.bgnormal {
+  background-color:#c0c0c0; 
+}
+
+td.bgsafe {
+  background-color:#ffffff; 
+}
+
+td.bgout {
+  background-color:#ff0000; 
+}
